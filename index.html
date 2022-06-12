@@ -1,145 +1,69 @@
-<!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <title>Copy image and text</title>
+        <meta charset="utf-8" />
+        <title>HTML DOM - Paste an image from the clipboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="/css/demo.css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap"
+        />
+        <style>
+            .container {
+                /* Center the content */
+                align-items: center;
+                display: flex;
+                justify-content: center;
+
+                /* Misc */
+                height: 32rem;
+                padding: 1rem 0;
+            }
+            .key {
+                background-color: #f7fafc;
+                border: 1px solid #cbd5e0;
+                border-radius: 0.25rem;
+                padding: 0.25rem;
+            }
+            .preview {
+                align-items: center;
+                border: 1px solid #cbd5e0;
+                display: flex;
+                justify-content: center;
+
+                margin-top: 1rem;
+                max-height: 16rem;
+                max-width: 42rem;
+            }
+        </style>
     </head>
     <body>
-        <div id="container">
-            <img
-                src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg"
-                width="80"
-                height="80"
-            />
-            <p>HTML Clipboard example</p>
+        <div class="container">
+            <div>
+                <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>
+                <img class="preview" id="preview" />
+            </div>
         </div>
-        <button onclick="writeDataToClipboard()">Write to Clipboard</button>
-        <button onclick="readDataFromClipboard()">Read from Clipboard</button>
+
         <script>
-            async function askWritePermission() {
-                try {
-                    const { state } = await navigator.permissions.query({
-                        name: "clipboard-write",
+            document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('paste', function (evt) {
+                    const clipboardItems = evt.clipboardData.items;
+                    const items = [].slice.call(clipboardItems).filter(function (item) {
+                        // Filter the image items only
+                        return item.type.indexOf('image') !== -1;
                     });
-                    return state === "granted";
-                } catch (error) {
-                    return false;
-                }
-            }
-
-            async function askReadPermission() {
-                try {
-                    const { state } = await navigator.permissions.query({
-                        name: "clipboard-read",
-                    });
-                    return state === "granted";
-                } catch (error) {
-                    return false;
-                }
-            }
-
-            function select(element) {
-                const selection = window.getSelection();
-                const range = document.createRange();
-                range.selectNodeContents(element);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-
-            function createTextBlob(text) {
-                return new Blob([text], { type: "text/plain" });
-            }
-
-            async function createImageBlob(url) {
-                const response = await fetch(url);
-                return await response.blob();
-            }
-
-            async function writeDataToClipboard() {
-                if (askWritePermission()) {
-                    if (navigator.clipboard && navigator.clipboard.write) {
-                        const textBlob = createTextBlob("Sample Text copied into Clipboard");
-                        const imageBlob = await createImageBlob(
-                            "https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg"
-                        );
-                        try {
-                            const item = new ClipboardItem({
-                                [textBlob.type]: textBlob,
-                                [imageBlob.type]: imageBlob,
-                            });
-                            select(document.querySelector("#container"));
-                            await navigator.clipboard.write([item]);
-                            console.log("Text and images copied into Clipboard successfully");
-                        } catch (error) {
-                            console.error("Text and Image failed to copy into Clipboard", error);
-                        }
+                    if (items.length === 0) {
+                        return;
                     }
-                }
-            }
 
-            async function readDataFromClipboard() {
-                if (askReadPermission()) {
-                    if (navigator.clipboard && navigator.clipboard.read) {
-                        try {
-                            const clipboardItems = await navigator.clipboard.read();
-                            for (const clipboardItem of clipboardItems) {
-                                console.dir(clipboardItem);
-                                for (const type of clipboardItem.types) {
-                                    const blob = await clipboardItem.getType(
-                                        type
-                                    );
-                                    console.log(
-                                        "Clipboard contents read successfully",
-                                        await blob.text()
-                                    );
-                                }
-                            }
-                        } catch (err) {
-                            console.error("Failed to read clipboard contents ", err);
-                        }
-                    }
-                }
-            }
+                    const item = items[0];
+                    const blob = item.getAsFile();
 
-            const IMAGE_MIME_REGEX = /^image\/(p?jpeg|gif|png)$/i;
-
-            const loadImage = function (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    let img = document.createElement("img");
-                    img.src = e.target.result;
-
-                    let range = window.getSelection().getRangeAt(0);
-                    range.deleteContents();
-                    range.insertNode(img);
-                };
-                reader.readAsDataURL(file);
-            };
-
-            document.addEventListener("paste", async (e) => {
-                e.preventDefault();
-                if (navigator.clipboard) {
-                    let clipboardItems = await navigator.clipboard.read();
-                    for (const clipboardItem of clipboardItems) {
-                        for (const type of clipboardItem.types) {
-                            if (IMAGE_MIME_REGEX.test(type)) {
-                                const blob = await clipboardItem.getType(type);
-                                loadImage(blob);
-                                return;
-                            }
-                        }
-                    }
-                } else {
-                    const items = e.clipboardData.items;
-                    for (let i = 0; i < items.length; i++) {
-                        if (IMAGE_MIME_REGEX.test(items[i].type)) {
-                            loadImage(items[i].getAsFile());
-                            return;
-                        }
-                    }
-                }
+                    const imageEle = document.getElementById('preview');
+                    imageEle.src = URL.createObjectURL(blob);
+                });
             });
         </script>
     </body>
-</html>
