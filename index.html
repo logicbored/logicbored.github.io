@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>Copy image and text</title>
@@ -8,14 +8,14 @@
     <body>
         <div id="container">
             <img
-                src="http://cdn.semlinker.com/abao.png"
+                src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg"
                 width="80"
                 height="80"
             />
-            <p>大家好，我是阿宝哥</p>
+            <p>HTML Clipboard example</p>
         </div>
-        <button onclick="writeDataToClipboard()">复制</button>
-        <button onclick="readDataFromClipboard()">粘贴</button>
+        <button onclick="writeDataToClipboard()">Write to Clipboard</button>
+        <button onclick="readDataFromClipboard()">Read from Clipboard</button>
         <script>
             async function askWritePermission() {
                 try {
@@ -59,9 +59,9 @@
             async function writeDataToClipboard() {
                 if (askWritePermission()) {
                     if (navigator.clipboard && navigator.clipboard.write) {
-                        const textBlob = createTextBlob("大家好，我是阿宝哥");
+                        const textBlob = createTextBlob("Sample Text copied into Clipboard");
                         const imageBlob = await createImageBlob(
-                            "http://cdn.semlinker.com/abao.png"
+                            "https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg"
                         );
                         try {
                             const item = new ClipboardItem({
@@ -70,9 +70,9 @@
                             });
                             select(document.querySelector("#container"));
                             await navigator.clipboard.write([item]);
-                            console.log("文本和图像复制成功");
+                            console.log("Text and images copied into Clipboard successfully");
                         } catch (error) {
-                            console.error("文本和图像复制失败", error);
+                            console.error("Text and Image failed to copy into Clipboard", error);
                         }
                     }
                 }
@@ -90,13 +90,13 @@
                                         type
                                     );
                                     console.log(
-                                        "已读取剪贴板中的内容：",
+                                        "Clipboard contents read successfully",
                                         await blob.text()
                                     );
                                 }
                             }
                         } catch (err) {
-                            console.error("读取剪贴板内容失败: ", err);
+                            console.error("Failed to read clipboard contents ", err);
                         }
                     }
                 }
