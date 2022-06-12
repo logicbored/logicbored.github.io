@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Copy image and text</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        <div id="container">
+            <img
+                src="http://cdn.semlinker.com/abao.png"
+                width="80"
+                height="80"
+            />
+            <p>大家好，我是阿宝哥</p>
+        </div>
+        <button onclick="writeDataToClipboard()">复制</button>
+        <button onclick="readDataFromClipboard()">粘贴</button>
+        <script>
+            async function askWritePermission() {
+                try {
+                    const { state } = await navigator.permissions.query({
+                        name: "clipboard-write",
+                    });
+                    return state === "granted";
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            async function askReadPermission() {
+                try {
+                    const { state } = await navigator.permissions.query({
+                        name: "clipboard-read",
+                    });
+                    return state === "granted";
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            function select(element) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
+            function createTextBlob(text) {
+                return new Blob([text], { type: "text/plain" });
+            }
+
+            async function createImageBlob(url) {
+                const response = await fetch(url);
+                return await response.blob();
+            }
+
+            async function writeDataToClipboard() {
+                if (askWritePermission()) {
+                    if (navigator.clipboard && navigator.clipboard.write) {
+                        const textBlob = createTextBlob("大家好，我是阿宝哥");
+                        const imageBlob = await createImageBlob(
+                            "http://cdn.semlinker.com/abao.png"
+                        );
+                        try {
+                            const item = new ClipboardItem({
+                                [textBlob.type]: textBlob,
+                                [imageBlob.type]: imageBlob,
+                            });
+                            select(document.querySelector("#container"));
+                            await navigator.clipboard.write([item]);
+                            console.log("文本和图像复制成功");
+                        } catch (error) {
+                            console.error("文本和图像复制失败", error);
+                        }
+                    }
+                }
+            }
+
+            async function readDataFromClipboard() {
+                if (askReadPermission()) {
+                    if (navigator.clipboard && navigator.clipboard.read) {
+                        try {
+                            const clipboardItems = await navigator.clipboard.read();
+                            for (const clipboardItem of clipboardItems) {
+                                console.dir(clipboardItem);
+                                for (const type of clipboardItem.types) {
+                                    const blob = await clipboardItem.getType(
+                                        type
+                                    );
+                                    console.log(
+                                        "已读取剪贴板中的内容：",
+                                        await blob.text()
+                                    );
+                                }
+                            }
+                        } catch (err) {
+                            console.error("读取剪贴板内容失败: ", err);
+                        }
+                    }
+                }
+            }
+
+            const IMAGE_MIME_REGEX = /^image\/(p?jpeg|gif|png)$/i;
+
+            const loadImage = function (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.createElement("img");
+                    img.src = e.target.result;
+
+                    let range = window.getSelection().getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(img);
+                };
+                reader.readAsDataURL(file);
+            };
+
+            document.addEventListener("paste", async (e) => {
+                e.preventDefault();
+                if (navigator.clipboard) {
+                    let clipboardItems = await navigator.clipboard.read();
+                    for (const clipboardItem of clipboardItems) {
+                        for (const type of clipboardItem.types) {
+                            if (IMAGE_MIME_REGEX.test(type)) {
+                                const blob = await clipboardItem.getType(type);
+                                loadImage(blob);
+                                return;
+                            }
+                        }
+                    }
+                } else {
+                    const items = e.clipboardData.items;
+                    for (let i = 0; i < items.length; i++) {
+                        if (IMAGE_MIME_REGEX.test(items[i].type)) {
+                            loadImage(items[i].getAsFile());
+                            return;
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
