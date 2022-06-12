@@ -45,6 +45,13 @@
                 <img class="preview" id="preview" />
             </div>
         </div>
+        <div id="drop-area">
+            <form class="my-form">
+                <p>Drag and drop images into this area</p>
+                <input tyupe="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.Files)">
+                <label class="button" for="fileElem">Select some files</label>
+            </form>
+        </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
