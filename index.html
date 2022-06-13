@@ -79,7 +79,9 @@
         </style>
     </head>
     <body>
-        <p>v24</p>
+        <!--- ********************* UPDATE VERSION # ******************************* ---->
+        <p>v25</p>
+        <!--- ********************* UPDATE VERSION # ******************************* ---->
 
         <div id="drop-area">
             <form class="my-form">
@@ -227,7 +229,8 @@
             });
 
             function updateMask(target) {
-                console.log(target);
+                console.log(target.getElementById);
+                console.log(target.getElementsByClassName);
                 if (target.getElementById == 'gallery') {
                     let elements = document.getElementsByClassName("highlight-wrap")
                     let hObj
