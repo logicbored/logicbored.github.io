@@ -97,24 +97,24 @@
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.addEventListener('paste', function (evt) {
-                    const clipboardItems = evt.clipboardData.items;
-                    const items = [].slice.call(clipboardItems).filter(function (item) {
-                        // Filter the image items only
-                        return item.type.indexOf('image') !== -1;
-                    });
-                    if (items.length === 0) {
-                        return;
-                    }
+            //document.addEventListener('DOMContentLoaded', function () {
+            //    document.addEventListener('paste', function (evt) {
+            //        const clipboardItems = evt.clipboardData.items;
+            //        const items = [].slice.call(clipboardItems).filter(function (item) {
+            //            // Filter the image items only
+            //            return item.type.indexOf('image') !== -1;
+            //        });
+            //        if (items.length === 0) {
+            //            return;
+            //        }
 
-                    const item = items[0];
-                    const blob = item.getAsFile();
+            //        const item = items[0];
+            //        const blob = item.getAsFile();
 
-                    const imageEle = document.getElementById('preview');
-                    imageEle.src = URL.createObjectURL(blob);
-                });
-            });
+            //        const imageEle = document.getElementById('preview');
+            //        imageEle.src = URL.createObjectURL(blob);
+            //    });
+            //});
 
               // ************************ Drag and drop ***************** //
               let dropArea = document.getElementById("drop-area")
