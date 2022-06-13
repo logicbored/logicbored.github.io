@@ -99,24 +99,24 @@
         <div class="note"><strong>Note: I've Removed the ability to actually upload files (it will error out silently since there is no error handler, so it'll still appear to work) because you guys were constantly filling up my Cloudinary account. Please <a href="https://cloudinary.com/invites/lpov9zyyucivvxsnalc5/j6iiupngdmwwwqspjtml">create your own account</a> and replace the "joezim007" and "ujpu6gyk" bits in the JavaScript with your own account's information.</strong></div>
               <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
         <script>
-            //document.addEventListener('DOMContentLoaded', function () {
-            //    document.addEventListener('paste', function (evt) {
-            //        const clipboardItems = evt.clipboardData.items;
-            //        const items = [].slice.call(clipboardItems).filter(function (item) {
-            //            // Filter the image items only
-            //            return item.type.indexOf('image') !== -1;
-            //        });
-            //        if (items.length === 0) {
-            //            return;
-            //        }
+            document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('paste', function (evt) {
+                    const clipboardItems = evt.clipboardData.items;
+                    const items = [].slice.call(clipboardItems).filter(function (item) {
+                    // Filter the image items only
+                        return item.type.indexOf('image') !== -1;
+                    });
+                    if (items.length === 0) {
+                        return;
+                    }
 
-            //        const item = items[0];
-            //        const blob = item.getAsFile();
+                    const item = items[0];
+                    const blob = item.getAsFile();
 
-            //        const imageEle = document.getElementById('preview');
-            //        imageEle.src = URL.createObjectURL(blob);
-            //    });
-            //});
+                    const imageEle = document.getElementById('preview');
+                    imageEle.src = URL.createObjectURL(blob);
+                });
+            });
 
               // ************************ Drag and drop ***************** //
               let dropArea = document.getElementById("drop-area")
