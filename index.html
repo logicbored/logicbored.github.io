@@ -80,7 +80,7 @@
     </head>
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
-        <p>v27</p>
+        <p>v28</p>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
         <div id="drop-area">
@@ -224,7 +224,11 @@
               }
         </script>
         <script>
-            window.addEventListener('mouseover', function (e) {
+            window.addEventListener('onmouseenter', function (e) {
+                updateMask(e.target);
+            });
+
+            window.addEventListener('onmouseleave', function (e) {
                 updateMask(e.target);
             });
 
