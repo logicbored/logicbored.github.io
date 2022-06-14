@@ -120,7 +120,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v51</p>
+        <p>v52</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -291,14 +291,15 @@
                 launchModal(e.target);
             });
 
-
+            // Files info: https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
             function launchModal(target) {
                 console.log('Launch Modal');
                 // document.getElementById("myModal").style.display = "block";
                 // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 
                 console.log(target.tagName);
-                console.log(target.files.length);
+                console.log(target.getElementById('IMG'));
+                //console.log(target.files.length);
                 var imgpath=target;
                 var imgsize=0;
                 if (!imgpath.value==""){
