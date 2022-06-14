@@ -81,7 +81,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v31</p>
+        <p>v32</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -227,10 +227,12 @@
         </script>
         <script>
             window.addEventListener('mouseover', function (e) {
+                console.log('Mouse over fired.');
                 updateMask(e.target);
             });
 
             window.addEventListener('mouseout', function (e) {
+                console.log('Mouse out fired.');
                 updateMask(e.target);
             });
 
