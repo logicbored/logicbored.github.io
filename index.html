@@ -76,12 +76,51 @@
             #fileElem {
               display: none;
             }
+
+            /* The Modal (background) */
+            .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 100%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            /* Modal Content */
+            .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+
+            /* The Close Button */
+            .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+            }
         </style>
     </head>
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v39</p>
+        <p>v40</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -95,6 +134,17 @@
             <div id="gallery" /></div>
         </div>
         
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+          </div>
+
+        </div>
+
         <!---
         // <div class="note"><strong>Note: I've Removed the ability to actually upload files (it will error out silently since there is no error handler, so it'll still appear to work) because you guys were constantly filling up my Cloudinary account. Please <a href="https://cloudinary.com/invites/lpov9zyyucivvxsnalc5/j6iiupngdmwwwqspjtml">create your own account</a> and replace the "joezim007" and "ujpu6gyk" bits in the JavaScript with your own account's information.</strong></div>
         --->
@@ -235,6 +285,17 @@
                 console.log('Mouse OUT fired.');
                 removeMask(e.target);
             });
+
+            window.addEventListener('mousedown', function (e) {
+                console.log('Mouse CLICK fired.');
+                launchModal(e.target);
+            });
+
+
+            function launchModal(target) {
+                console.log('Launch Modal');
+                document.getElementById("myModal").style.display = "block";
+            }
 
             function removeMask(target) {
                 console.log('Removing Mask');
