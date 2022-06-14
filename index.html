@@ -120,7 +120,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v43</p>
+        <p>v44</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -303,7 +303,7 @@
                     var img=imgpath.files[0].size;
                     var imgsize=img/1024;
                 }
-                window.alert('Source Image Size: ' + target.naturalWidth + 'px-width X ' + target.naturalHeight + 'px-height');
+                window.alert('Source Image Resolution: ' + target.naturalWidth + 'px-width X ' + target.naturalHeight + 'px-height' + ' (Filesize: ' + imgsize + ')');
             }
 
             function removeMask(target) {
@@ -313,7 +313,6 @@
                 if (elements.length !== 0) {
                     document.body.removeChild(elements[0]);
                 }
-
             }
 
             function updateMask(target) {
