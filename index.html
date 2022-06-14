@@ -81,7 +81,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v33</p>
+        <p>v34</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -235,6 +235,16 @@
                 console.log('Mouse OUT fired.');
                 updateMask(e.target);
             });
+
+            function removeMask(target) {
+                console.log('Removing Mask');
+                console.log(target.tagName);
+                let elements = document.getElementsByClassName("highlight-wrap");
+                if (elements.length !== 0) {
+                    document.body.removeChild(elements[0]);
+                }
+
+            }
 
             function updateMask(target) {
 
