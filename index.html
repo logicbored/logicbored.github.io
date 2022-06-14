@@ -81,7 +81,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v38</p>
+        <p>v39</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -238,7 +238,7 @@
 
             function removeMask(target) {
                 console.log('Removing Mask');
-                console.log(target.tagName);
+                // console.log(target.tagName);
                 let elements = document.getElementsByClassName("highlight-wrap");
                 if (elements.length !== 0) {
                     document.body.removeChild(elements[0]);
@@ -248,10 +248,10 @@
 
             function updateMask(target) {
 
-                console.log(target);
+                // console.log(target);
                 // console.log(target.getElementById);
                 // console.log(target.getElementsByClassName);
-                console.log(target.nodeType);
+                // console.log(target.nodeType);
                 console.log(target.tagName);
                 console.log('========');
                 if (target.tagName == 'IMG') {
