@@ -236,7 +236,7 @@
                 console.log(target.nodeType);
                 console.log(target.tagName);
                 console.log('========');
-                if (target.getElementById == 'gallery') {
+                if (target.tagName == 'IMG') {
                     let elements = document.getElementsByClassName("highlight-wrap")
                     let hObj
                     if (elements.length !== 0) {
