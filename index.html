@@ -120,7 +120,7 @@
     <body>
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
-        <p>v41</p>
+        <p>v43</p>
         
         <!--- ********************* UPDATE VERSION # ******************************* ---->
 
@@ -296,7 +296,14 @@
                 console.log('Launch Modal');
                 // document.getElementById("myModal").style.display = "block";
                 // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
-                window.alert('Natural Image Size: ' + target.naturalWidth + 'px wide X ' + target.naturalHeight + 'px high');
+
+                var imgpath=target;
+                var imgsize=0;
+                if (!imgpath.value==""){
+                    var img=imgpath.files[0].size;
+                    var imgsize=img/1024;
+                }
+                window.alert('Source Image Size: ' + target.naturalWidth + 'px-width X ' + target.naturalHeight + 'px-height');
             }
 
             function removeMask(target) {
