@@ -1,0 +1,378 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="apple-mobile-web-app-title" content="Miro">
+        <meta name="application-name" content="Miro">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-TileImage" content="/static/favicons/mstile-144x144.png">
+        <meta name="msapplication-config" content="/static/favicons/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+
+        <meta property="og:site_name" content="miro.com" ng-non-bindable/>
+        <meta property="og:type" content="website" ng-non-bindable/>
+        <meta property="og:determiner" content="a" ng-non-bindable/>
+        <meta property="og:title" content="Vision Planning: Vuforia and Vuforia+" ng-non-bindable/>
+        <meta property="og:description" content="" ng-non-bindable/>
+        <meta property="og:image" content="//miro.com/api/v1/boards/uXjVPCp9f1U=/picture?etag=G" ng-non-bindable/>
+        <meta property="og:url" content="https://miro.com/app/board/uXjVPCp9f1U=/" ng-non-bindable/>
+        <meta property="twitter:card" content="summary" ng-non-bindable/>
+        <meta property="twitter:url" content="https://miro.com/app/board/uXjVPCp9f1U=/" ng-non-bindable/>
+        <meta property="twitter:title" content="Vision Planning: Vuforia and Vuforia+" ng-non-bindable/>
+        <meta property="twitter:description" content="" ng-non-bindable/>
+        <meta property="twitter:image" content="//miro.com/api/v1/boards/uXjVPCp9f1U=/picture?etag=G" ng-non-bindable/>
+  
+        <link rel="alternate" type="application/json+oembed" title="Miro board" href="https://miro.com/api/v1/oembed?format=json&amp;url=https%3A%2F%2Fmiro.com%2Fapp%2Fboard%2FuXjVPCp9f1U%3D%2F"/>
+        <link rel="alternate" type="text/xml+oembed" title="Miro board" href="https://miro.com/api/v1/oembed?format=xml&amp;url=https%3A%2F%2Fmiro.com%2Fapp%2Fboard%2FuXjVPCp9f1U%3D%2F"/>
+
+        <title>HTML DOM - Paste an image from the clipboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap"
+        />
+        <style>
+            .container {
+                /* Center the content */
+                align-items: center;
+                display: flex;
+                justify-content: center;
+
+                /* Misc */
+                height: 32rem;
+                padding: 1rem 0;
+            }
+            .key {
+                background-color: #f7fafc;
+                border: 1px solid #cbd5e0;
+                border-radius: 0.25rem;
+                padding: 0.25rem;
+            }
+            .preview {
+                align-items: center;
+                border: 1px solid #cbd5e0;
+                display: flex;
+                justify-content: center;
+
+                margin-top: 1rem;
+                max-height: 16rem;
+                max-width: 42rem;
+            }
+
+            #drop-area {
+              border: 2px dashed #ccc;
+              border-radius: 20px;
+              width: 720px;
+              font-family: sans-serif;
+              margin: 100px auto;
+              padding: 20px;
+            }
+            #drop-area.highlight {
+              border-color: purple;
+            }
+            p {
+              margin-top: 0;
+            }
+            .my-form {
+              margin-bottom: 10px;
+            }
+            #gallery {
+              margin-top: 10px;
+            }
+            #gallery img {
+              width: 300px;
+              margin-bottom: 10px;
+              margin-right: 10px;
+              vertical-align: middle;
+            }
+            .button {
+              display: inline-block;
+              padding: 10px;
+              background: #ccc;
+              cursor: pointer;
+              border-radius: 5px;
+              border: 1px solid #ccc;
+            }
+            .button:hover {
+              background: #ddd;
+            }
+            #fileElem {
+              display: none;
+            }
+
+            /* The Modal (background) */
+            .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 100%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            /* Modal Content */
+            .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+
+            /* The Close Button */
+            .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <!--- ********************* UPDATE VERSION # ******************************* ---->
+
+        <p>v52</p>
+        
+        <!--- ********************* UPDATE VERSION # ******************************* ---->
+
+        <div id="drop-area">
+            <form class="my-form">
+                <p>In-Session - drag &amp; drop or paste-in an image!</p>
+                <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+                <label class="button" for="fileElem">Select some files</label>
+            </form>
+            <progress id="progress-bar" max=100 value=0></progress>
+            <div id="gallery" /></div>
+        </div>
+        
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+          </div>
+
+        </div>
+
+        <!---
+        // <div class="note"><strong>Note: I've Removed the ability to actually upload files (it will error out silently since there is no error handler, so it'll still appear to work) because you guys were constantly filling up my Cloudinary account. Please <a href="https://cloudinary.com/invites/lpov9zyyucivvxsnalc5/j6iiupngdmwwwqspjtml">create your own account</a> and replace the "joezim007" and "ujpu6gyk" bits in the JavaScript with your own account's information.</strong></div>
+        --->
+              <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('paste', function (evt) {
+                    const clipboardItems = evt.clipboardData.items;
+                    const items = [].slice.call(clipboardItems).filter(function (item) {
+                    // Filter the image items only
+                        return item.type.indexOf('image') !== -1;
+                    });
+                    if (items.length === 0) {
+                        return;
+                    }
+
+                    const item = items[0];
+                    const blob = item.getAsFile();
+
+                    //const imageEle = document.getElementById('preview');
+                    //imageEle.src = URL.createObjectURL(blob);
+                    //const imageElement = document.getElementById('gallery');
+                    let img = document.createElement('img');
+                    img.src = URL.createObjectURL(blob);
+                    document.getElementById('gallery').appendChild(img);                  
+                });
+            });
+
+              // ************************ Drag and drop ***************** //
+              let dropArea = document.getElementById("drop-area")
+
+              // Prevent default drag behaviors
+              ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+              })
+
+              // Highlight drop area when item is dragged over it
+              ;['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+              });
+
+              ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+              });
+
+              // Handle dropped files
+              dropArea.addEventListener('drop', handleDrop, false);
+
+              function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+
+              function highlight(e) {
+                dropArea.classList.add('highlight');
+              }
+
+              function unhighlight(e) {
+                dropArea.classList.remove('active');
+              }
+
+              function handleDrop(e) {
+                var dt = e.dataTransfer;
+                var files = dt.files;
+
+                handleFiles(files);
+              }
+
+              let uploadProgress = [];
+              let progressBar = document.getElementById('progress-bar');
+
+              function initializeProgress(numFiles) {
+                progressBar.value = 0;
+                uploadProgress = [];
+
+                for (let i = numFiles; i > 0; i--) {if (window.CP.shouldStopExecution(0)) break;
+                  uploadProgress.push(0);
+                }window.CP.exitedLoop(0);
+              }
+
+              function updateProgress(fileNumber, percent) {
+                uploadProgress[fileNumber] = percent;
+                let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length;
+                progressBar.value = total;
+              }
+
+              function handleFiles(files) {
+                files = [...files];
+                initializeProgress(files.length);
+                files.forEach(uploadFile);
+                files.forEach(previewFile);
+              }
+
+              function previewFile(file) {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function () {
+                  let img = document.createElement('img');
+                  img.src = reader.result;
+                  document.getElementById('gallery').appendChild(img);
+                };
+              }
+
+              function uploadFile(file, i) {
+                var url = 'https://api.cloudinary.com/v1_1/dmmxnve0h/image/upload';
+                var xhr = new XMLHttpRequest();
+                var formData = new FormData();
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                // Update progress (can be used to show progress indicator)
+                xhr.upload.addEventListener("progress", function (e) {
+                  updateProgress(i, e.loaded * 100.0 / e.total || 100);
+                });
+
+                xhr.addEventListener('readystatechange', function (e) {
+                  if (xhr.readyState == 4 && xhr.status == 200) {
+                    updateProgress(i, 100); // <- Add this
+                  } else
+                  if (xhr.readyState == 4 && xhr.status != 200) {
+                    // Error. Inform the user
+                  }
+                });
+
+                formData.append('upload_preset', 'dmmxnve0h');
+                formData.append('file', file);
+                xhr.send(formData);
+              }
+        </script>
+        <script>
+            window.addEventListener('mouseover', function (e) {
+                console.log('Mouse IN fired.');
+                updateMask(e.target);
+            });
+
+            window.addEventListener('mouseout', function (e) {
+                console.log('Mouse OUT fired.');
+                removeMask(e.target);
+            });
+
+            window.addEventListener('mousedown', function (e) {
+                console.log('Mouse CLICK fired.');
+                launchModal(e.target);
+            });
+
+            // Files info: https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
+            function launchModal(target) {
+                console.log('Launch Modal');
+                // document.getElementById("myModal").style.display = "block";
+                // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+
+                console.log(target.tagName);
+                console.log(target.getElementById('IMG'));
+                //console.log(target.files.length);
+                var imgpath=target;
+                var imgsize=0;
+                if (!imgpath.value==""){
+                    var img=imgpath.files[0].size;
+                    var imgsize=img/1024;
+                }
+                window.alert('Source Image Resolution: ' + target.naturalWidth + 'px-width X ' + target.naturalHeight + 'px-height' + ' (Filesize: ' + imgsize + ')');
+            }
+
+            function removeMask(target) {
+                console.log('Removing Mask');
+                // console.log(target.tagName);
+                let elements = document.getElementsByClassName("highlight-wrap");
+                if (elements.length !== 0) {
+                    document.body.removeChild(elements[0]);
+                }
+            }
+
+            function updateMask(target) {
+
+                // console.log(target);
+                // console.log(target.getElementById);
+                // console.log(target.getElementsByClassName);
+                // console.log(target.nodeType);
+                console.log(target.tagName);
+                console.log('========');
+                if (target.tagName == 'IMG') {
+                    let elements = document.getElementsByClassName("highlight-wrap")
+                    let hObj
+                    if (elements.length !== 0) {
+                        hObj = elements[0]
+                    } else {
+                        hObj = document.createElement("div");
+                        hObj.className = 'highlight-wrap';
+                        hObj.style.position = 'absolute';
+                        // hObj.style.backgroundColor = '#205081';
+                        hObj.style.backgroundColor = '#000000';
+                        hObj.style.opacity = '0.7';
+                        hObj.style.cursor = 'default';
+                        hObj.style.pointerEvents = 'none';
+                        document.body.appendChild(hObj);
+                    }
+                    let rect = target.getBoundingClientRect();
+                    hObj.style.left = (rect.left + window.scrollX) + "px";
+                    hObj.style.top = (rect.top + window.scrollY) + "px";
+                    hObj.style.width = rect.width + "px";
+                    hObj.style.height = rect.height + "px";
+                }
+       
+            }
+             </script>
+    </body>
